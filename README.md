@@ -1,43 +1,84 @@
-🍏 Nutritech 🥗
-Bienvenue sur Nutritech !
-Votre assistant santé simple et efficace pour connaître vos besoins caloriques journaliers et recevoir des conseils personnalisés adaptés à VOS objectifs. 🎯
+# 🌿 NutriTech 🧠 – L’intelligence de la nutrition au service de votre santé
 
-🚀 Comment ça marche ?
-1️⃣ Entrez votre sexe, poids (kg), taille (cm) et âge 🧍‍♂️🧍‍♀️
-2️⃣ Choisissez votre niveau d’activité physique :
- • Sédentaire 🛋️
- • Modéré 🚶‍♂️
- • Actif 🏃‍♀️
-3️⃣ Sélectionnez votre objectif :
- • Perdre du poids 🔻
- • Maintenir votre poids ⚖️
- • Prendre du poids 🔺
-4️⃣ L’application calcule vos besoins caloriques avec la formule scientifiquement reconnue Mifflin-St Jeor 📊
-5️⃣ Recevez un pourcentage personnalisé de vos besoins énergétiques et des conseils nutritionnels adaptés 🍎🥦
+**NutriTech** est une application web innovante d’**intelligence artificielle nutritionnelle**, conçue pour aider chaque individu à **mieux comprendre son corps, ses besoins caloriques** et à **recevoir des conseils personnalisés** pour améliorer son mode de vie.
 
-💡 Pourquoi RiskCheck Nutrition ?
-✅ Facile à utiliser, sans jargon compliqué
-✅ Calcul fiable basé sur des formules validées par la science
-✅ Conseils nutritionnels simples et pratiques pour atteindre vos objectifs
-✅ Accessible à tous, gratuitement 🌍
+---
 
-⚠️ Important
-Nutritech est un outil éducatif et informel.
-Il ne remplace pas un avis médical ou nutritionnel professionnel.
-Consultez un médecin ou diététicien avant toute modification importante de votre alimentation. 🩺
+## 🚀 Fonctionnalités principales
 
-🎉 Prêt à commencer ?
-👉 Accédez à l’application ici : [votre lien]
+✨ **Calcul intelligent des besoins caloriques journaliers**  
+🎯 Basé sur la **formule Mifflin-St Jeor**, adaptée pour les hommes et les femmes
 
-## 👨‍💻 Auteur
-Contact : [ibbidiallo7@gmail.com](mailto:ibbidiallo7@gmail.com)
+💬 **Assistant IA interactif**  
+Posez-lui des questions simples comme :
+- « Combien de calories dois-je consommer par jour ? »
+- « Comment perdre du poids intelligemment ? »
+- « Que dois-je manger si je suis sédentaire ? »
 
-GitHub :[ibrahima-med-ai](https://github.com/ibrahima-med-ai)
+🥗 **Conseils nutritionnels personnalisés**  
+En fonction de vos objectifs :
+- ✅ Perte de poids
+- 💪 Prise de masse
+- ⚖️ Maintien de forme
+
+🧪 **Analyse des facteurs de mode de vie**  
+✓ Activité physique  
+✓ Antécédents familiaux  
+✓ Objectif santé  
+
+---
+
+## 🧬 Technologies utilisées
+
+- `Python` + `scikit-learn` pour les calculs et l’IA
+- `Gradio` pour une interface interactive simple et intuitive
+- `Google Colab` pour l’hébergement temporaire
+- Préparation future du déploiement avec `Flask` + `Render` ou `HuggingFace Spaces`
+
+---
+
+## 📌 Utilisation rapide
+
+1. Cliquez sur ce lien pour accéder à l’interface 👉 [Lien Gradio ici](#)
+2. Entrez vos données : âge, poids, taille, activité physique...
+3. L’IA calcule vos besoins caloriques et vous donne des conseils personnalisés
+4. ✅ Suivez-les et progressez !
+
+---
+
+## 🎯 Objectif du projet
+
+NutriTech a été développé dans le cadre d’un projet personnel visant à :
+- 🌍 **Rendre la nutrition accessible et compréhensible à tous**
+- 🤖 **Montrer comment l’IA peut éduquer et prévenir les maladies**
+- 🚀 **Construire une preuve de concept solide pour un futur produit de santé numérique à impact**
+
+---
+
+## 👤 Auteur
+
+**Ibrahima Diallo**  
+Lycéen passionné d’intelligence artificielle médicale & de santé préventive  
+📧 ibbidiallo7@gmail.com 
+🌐 GitHub : [ibrahima-med-ai](https://github.com/ibrahima-med-ai)
 
 ---
 
 ## 📄 Licence
 
-Ce projet est sous licence **MIT** – voir le fichier [LICENSE](LICENSE) pour plus de détails.
+Ce projet est distribué sous licence MIT. Voir [LICENSE](./LICENSE) pour plus d'informations.
+
+---
+
+## 💖 Support & feedback
+
+Vous aimez le projet ? Vous avez des idées pour l’améliorer ?  
+👉 N’hésitez pas à ouvrir une **issue**, faire une **pull request** ou m’écrire directement !
+
+---
+
+
+
+
 
 © 2025 Ibrahima Diallo — Projet sous licence MIT  
