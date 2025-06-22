@@ -1,51 +1,33 @@
-# RiskCheck 🩺 — Évaluez vos risques de maladies chroniques grâce à l'IA
+🍏 Nutritech 🥗
+Bienvenue sur Nutritech !
+Votre assistant santé simple et efficace pour connaître vos besoins caloriques journaliers et recevoir des conseils personnalisés adaptés à VOS objectifs. 🎯
 
-RiskCheck est une plateforme web accessible à tous, qui utilise l’intelligence artificielle pour vous aider à mieux comprendre vos risques personnels de maladies chroniques comme le diabète, l’hypertension et les maladies cardiovasculaires.
+🚀 Comment ça marche ?
+1️⃣ Entrez votre sexe, poids (kg), taille (cm) et âge 🧍‍♂️🧍‍♀️
+2️⃣ Choisissez votre niveau d’activité physique :
+ • Sédentaire 🛋️
+ • Modéré 🚶‍♂️
+ • Actif 🏃‍♀️
+3️⃣ Sélectionnez votre objectif :
+ • Perdre du poids 🔻
+ • Maintenir votre poids ⚖️
+ • Prendre du poids 🔺
+4️⃣ L’application calcule vos besoins caloriques avec la formule scientifiquement reconnue Mifflin-St Jeor 📊
+5️⃣ Recevez un pourcentage personnalisé de vos besoins énergétiques et des conseils nutritionnels adaptés 🍎🥦
 
----
+💡 Pourquoi RiskCheck Nutrition ?
+✅ Facile à utiliser, sans jargon compliqué
+✅ Calcul fiable basé sur des formules validées par la science
+✅ Conseils nutritionnels simples et pratiques pour atteindre vos objectifs
+✅ Accessible à tous, gratuitement 🌍
 
-## 🚀 Fonctionnalités principales
+⚠️ Important
+Nutritech est un outil éducatif et informel.
+Il ne remplace pas un avis médical ou nutritionnel professionnel.
+Consultez un médecin ou diététicien avant toute modification importante de votre alimentation. 🩺
 
-- **Analyse personnalisée** de vos facteurs de risque (âge, poids, antécédents familiaux, etc.)
-- **Prédiction basée sur des modèles IA** fiables et validés
-- Interface simple, intuitive et conçue pour un usage grand public
-- **Conseils pratiques** pour mieux prévenir ces maladies
-- Confidentialité et sécurité de vos données garanties
-
----
-
-## Comment utiliser RiskCheck ?
-
-1. Rendez-vous sur l’interface web de RiskCheck (lien : [ajoute ici l’URL de ton app])
-2. Remplissez le formulaire avec vos informations personnelles et données de santé simples
-3. Lancez l’analyse et recevez une évaluation claire de vos risques
-4. Consultez les recommandations personnalisées pour mieux gérer votre santé
-
----
-
-## 🔒 Confidentialité
-
-Vos données sont **strictement confidentielles**. Elles ne sont ni partagées ni vendues. RiskCheck respecte votre vie privée et utilise vos informations uniquement pour produire une analyse personnalisée.
-
----
-
-## 💡 Pourquoi RiskCheck ?
-
-La prévention est la clé pour vivre mieux et plus longtemps. En comprenant mieux vos risques, vous pouvez agir tôt, consulter un professionnel de santé au bon moment et adapter votre mode de vie.
-
----
-
-## 📞 Besoin d’aide ?
-
-Contactez-nous à : ibbidiallo7@gmail.com  
-Ou ouvrez une issue sur GitHub : [lien vers la page issues GitHub]
-
----
-
-Merci d’utiliser RiskCheck pour prendre soin de votre santé !
-
----
-
+🎉 Prêt à commencer ?
+👉 Accédez à l’application ici : [votre lien]
 
 ## 👨‍💻 Auteur
 Contact : [ibbidiallo7@gmail.com](mailto:ibbidiallo7@gmail.com)
