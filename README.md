@@ -9,11 +9,6 @@
 ✨ **Calcul intelligent des besoins caloriques journaliers**  
 🎯 Basé sur la **formule Mifflin-St Jeor**, adaptée pour les hommes et les femmes
 
-💬 **Assistant IA interactif**  
-Posez-lui des questions simples comme :
-- « Combien de calories dois-je consommer par jour ? »
-- « Comment perdre du poids intelligemment ? »
-- « Que dois-je manger si je suis sédentaire ? »
 
 🥗 **Conseils nutritionnels personnalisés**  
 En fonction de vos objectifs :
@@ -22,8 +17,7 @@ En fonction de vos objectifs :
 - ⚖️ Maintien de forme
 
 🧪 **Analyse des facteurs de mode de vie**  
-✓ Activité physique  
-✓ Antécédents familiaux  
+✓ Activité physique   
 ✓ Objectif santé  
 
 ---
@@ -39,7 +33,7 @@ En fonction de vos objectifs :
 
 ## 📌 Utilisation rapide
 
-1. Cliquez sur ce lien pour accéder à l’interface 👉 [https://56f1a23e05178182c6.gradio.live/](#)
+1. Cliquez sur ce lien pour accéder à l’interface 👉 [https://1ef4ad591703a3c9ef.gradio.live/](#)
 2. Entrez vos données : âge, poids, taille, activité physique...
 3. L’IA calcule vos besoins caloriques et vous donne des conseils personnalisés
 4. ✅ Suivez-les et progressez !
