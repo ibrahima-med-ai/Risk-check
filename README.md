@@ -1,38 +1,51 @@
-# RiskCheck 🩺 – Prédiction IA des maladies chroniques
+# RiskCheck 🩺 — Évaluez vos risques de maladies chroniques grâce à l'IA
 
-RiskCheck est une plateforme web d’intelligence artificielle destinée au grand public, permettant d’évaluer les risques individuels de maladies chroniques telles que le diabète, l’hypertension, et les maladies cardiovasculaires à partir de données simples.
+RiskCheck est une plateforme web accessible à tous, qui utilise l’intelligence artificielle pour vous aider à mieux comprendre vos risques personnels de maladies chroniques comme le diabète, l’hypertension et les maladies cardiovasculaires.
 
 ---
 
 ## 🚀 Fonctionnalités principales
 
-- Analyse personnalisée des facteurs de risque (âge, poids, antécédents familiaux, etc.)  
-- Modèles IA basés sur la régression logistique pour prédire plusieurs maladies chroniques  
-- Interface simple et intuitive adaptée aux utilisateurs non experts  
-- Conseils de prévention et recommandations personnalisées  
+- **Analyse personnalisée** de vos facteurs de risque (âge, poids, antécédents familiaux, etc.)
+- **Prédiction basée sur des modèles IA** fiables et validés
+- Interface simple, intuitive et conçue pour un usage grand public
+- **Conseils pratiques** pour mieux prévenir ces maladies
+- Confidentialité et sécurité de vos données garanties
 
 ---
 
-## ⚙️ Technologies utilisées
+## Comment utiliser RiskCheck ?
 
-- Python avec scikit-learn pour les modèles de prédiction  
-- Flask pour l’API backend  
-- React / Next.js pour le frontend  
-- GitHub pour le versioning et la collaboration  
-- Vercel et Render pour le déploiement  
-
----
-
-## 🎯 Objectif du projet
-
-Ce projet personnel a pour but de démontrer mes compétences en intelligence artificielle appliquée à la santé, en couvrant l’ensemble du processus, de la modélisation à la mise en production, avec un impact social positif.
+1. Rendez-vous sur l’interface web de RiskCheck (lien : [ajoute ici l’URL de ton app])
+2. Remplissez le formulaire avec vos informations personnelles et données de santé simples
+3. Lancez l’analyse et recevez une évaluation claire de vos risques
+4. Consultez les recommandations personnalisées pour mieux gérer votre santé
 
 ---
 
-## 📂 Installation & utilisation
+## 🔒 Confidentialité
 
-1. Cloner ce dépôt  
-2. Installer les dépendances Python du backend :
+Vos données sont **strictement confidentielles**. Elles ne sont ni partagées ni vendues. RiskCheck respecte votre vie privée et utilise vos informations uniquement pour produire une analyse personnalisée.
+
+---
+
+## 💡 Pourquoi RiskCheck ?
+
+La prévention est la clé pour vivre mieux et plus longtemps. En comprenant mieux vos risques, vous pouvez agir tôt, consulter un professionnel de santé au bon moment et adapter votre mode de vie.
+
+---
+
+## 📞 Besoin d’aide ?
+
+Contactez-nous à : ibbidiallo7@gmail.com  
+Ou ouvrez une issue sur GitHub : [lien vers la page issues GitHub]
+
+---
+
+Merci d’utiliser RiskCheck pour prendre soin de votre santé !
+
+---
+
 
 ## 👨‍💻 Auteur
 Contact : [ibbidiallo7@gmail.com](mailto:ibbidiallo7@gmail.com)
@@ -44,3 +57,5 @@ GitHub :[ibrahima-med-ai](https://github.com/ibrahima-med-ai)
 ## 📄 Licence
 
 Ce projet est sous licence **MIT** – voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+© 2025 Ibrahima Diallo — Projet sous licence MIT  
