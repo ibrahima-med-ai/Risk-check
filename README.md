@@ -39,7 +39,7 @@ En fonction de vos objectifs :
 
 ## 📌 Utilisation rapide
 
-1. Cliquez sur ce lien pour accéder à l’interface 👉 [Lien Gradio ici](#)
+1. Cliquez sur ce lien pour accéder à l’interface 👉 [https://56f1a23e05178182c6.gradio.live/](#)
 2. Entrez vos données : âge, poids, taille, activité physique...
 3. L’IA calcule vos besoins caloriques et vous donne des conseils personnalisés
 4. ✅ Suivez-les et progressez !
