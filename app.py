@@ -1,7 +1,10 @@
-import gradio as gr
 import os
+import gradio as gr
+from gradio.routes import mount_gradio_app
+from flask import Flask, render_template_string
 
-# Texte de connaissances nutritionnelles intégrées (inchangé)
+# ----- Fonctions IA et calculs (simplifiées ici) -----
+
 document_connaissances = """
 Nutrition et santé :
 
@@ -68,37 +71,32 @@ def recommandations(weight, height, age, gender, activity, goal):
         menu = "Régime équilibré avec variété d'aliments."
     return f"{cal} kcal/jour", sport, menu
 
-# Bannière image exemple
+# ----- Construction de l'interface Gradio -----
+
 BANNER_URL = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
 
-with gr.Blocks(theme=gr.themes.Base()) as app:
+with gr.Blocks() as gradio_app:
     with gr.Tabs():
         with gr.TabItem("🏠 Accueil"):
             gr.Image(value=BANNER_URL, show_label=False, interactive=False)
             gr.Markdown("""
 🚀 **SanatioTech : La Révolution Technologique pour une Santé Plus Intelligente !**
 
-Bienvenue chez SanatioTech 🌟 – où l’innovation rencontre les soins de santé pour créer un avenir plus sûr, plus connecté et plus humain.
+Bienvenue chez SanatioTech 🌟 – où l’innovation rencontre les soins de santé.
 
 💡 **Pourquoi SanatioTech ?**
 
-Nous repoussons les limites de la médecine grâce à des solutions high-tech intelligentes, conçues pour les professionnels exigeants comme pour les patients éclairés. Notre mission ? Vous offrir des outils qui anticipent, simplifient et améliorent votre quotidien.
+Nous repoussons les limites de la médecine grâce à des solutions high-tech intelligentes.
 
-✨ **Nos Atouts Incontournables**
+✨ **Nos Atouts**
 
-🔹 Innovation de Pointe : IA médicale, diagnostics assistés, gestion optimisée des données… La santé de demain, aujourd’hui.  
-🔹 Sécurité Impeccable 🔒 : Vos données sont protégées avec des protocoles ultra-sécurisés, conformes aux normes internationales.  
-🔹 Simplicité d’Usage : Des interfaces intuitives pour une prise en main immédiate, sans compromis sur la performance.  
-🔹 Impact Réel : Des solutions qui améliorent concrètement les résultats médicaux et le confort des patients.
+🔹 Innovation de Pointe  
+🔹 Sécurité Impeccable  
+🔹 Simplicité d’Usage  
+🔹 Impact Réel  
 
 🌍 **Rejoignez la Révolution SanatioTech !**
-
-Que vous soyez médecin, établissement de santé, ou particulier, nos technologies sur-mesure vous accompagnent pour une santé plus précise, proactive et personnalisée.
-
-👉 Découvrez nos solutions et transformez votre approche des soins !
-
-#SantéConnectée #InnovationMédicale #FuturDeLaSanté
-            """)
+""")
 
         with gr.TabItem("📊 NutriTech"):
             with gr.Tabs():
@@ -106,48 +104,16 @@ Que vous soyez médecin, établissement de santé, ou particulier, nos technolog
                     gr.Markdown("""
 🌿 **NutriTech 🧠 – L’intelligence de la nutrition au service de votre santé**
 
-NutriTech est une application web innovante d’intelligence artificielle nutritionnelle, conçue pour aider chaque individu à mieux comprendre son corps, ses besoins caloriques et à recevoir des conseils personnalisés pour améliorer son mode de vie.
+NutriTech est une application web d’IA nutritionnelle pour aider à mieux comprendre son corps et ses besoins caloriques.
 
 🚀 **Fonctionnalités principales**  
 ✨ Calcul intelligent des besoins caloriques journaliers  
-🎯 Basé sur la formule Mifflin-St Jeor, adaptée pour les hommes et les femmes  
-
-🥗 **Conseils nutritionnels personnalisés**  
-En fonction de vos objectifs :  
-✅ Perte de poids  
-💪 Prise de masse  
-⚖️ Maintien de forme  
-
-🧪 **Analyse des facteurs de mode de vie**  
-✓ Activité physique  
-✓ Objectif santé  
-
-🧬 **Technologies utilisées**  
-Python + scikit-learn pour les calculs et l’IA  
-Gradio pour une interface interactive simple et intuitive  
-Google Colab pour l’hébergement temporaire  
-Préparation future du déploiement avec Flask + Render ou HuggingFace Spaces  
-
-🎯 **Objectif du projet**  
-NutriTech a été développé dans le cadre d’un projet personnel visant à :  
-🌍 Rendre la nutrition accessible et compréhensible à tous  
-🤖 Montrer comment l’IA peut éduquer et prévenir les maladies  
-🚀 Construire une preuve de concept solide pour un futur produit de santé numérique à impact  
+🎯 Conseils personnalisés selon vos objectifs  
 
 👤 **Auteur**  
 Ibrahima Diallo  
-Lycéen passionné d’intelligence artificielle médicale & de santé préventive  
-📧 ibbidiallo7@gmail.com 🌐 GitHub : ibrahima-med-ai  
+""")
 
-📄 **Licence**  
-Ce projet est distribué sous licence MIT. Voir LICENSE pour plus d'informations.  
-
-💖 **Support & feedback**  
-Vous aimez le projet ? Vous avez des idées pour l’améliorer ?  
-👉 N’hésitez pas à ouvrir une issue, faire une pull request ou m’écrire directement !  
-
-© 2025 Ibrahima Diallo — Projet sous licence MIT
-                    """)
                 with gr.TabItem("🔢 Calcul & conseils"):
                     with gr.Row():
                         with gr.Column():
@@ -194,6 +160,32 @@ Vous aimez le projet ? Vous avez des idées pour l’améliorer ?
 **Restez connecté !**
             """)
 
-# Lancement de l'app avec port et host adaptés (pour déploiement sur Render ou autre)
-port = int(os.environ.get("PORT", 7860))
-app.launch(server_name="0.0.0.0", server_port=port) 
+# ----- Flask App + balise Google -----
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    html = """
+    <!DOCTYPE html>
+    <html lang="fr">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="google-site-verification" content="a6HWxh7D0IU4QDs-OkPDmuPgi05q8Q6jnEgm48J6Nx0" />
+        <title>Sanatiotech</title>
+      </head>
+      <body>
+        <h1>Bienvenue sur Sanatiotech</h1>
+        <p>Accédez à l'application NutriTech ici : <a href="/app">👉 NutriTech</a></p>
+      </body>
+    </html>
+    """
+    return render_template_string(html)
+
+# Monte Gradio sous /app
+mount_gradio_app(app, gradio_app, path="/app")
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 7860))
+    app.run(host="0.0.0.0", port=port)
