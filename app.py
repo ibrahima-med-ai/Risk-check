@@ -1,4 +1,5 @@
 import gradio as gr
+import os
 
 # Texte de connaissances nutritionnelles intégrées (inchangé)
 document_connaissances = """
@@ -193,4 +194,6 @@ Vous aimez le projet ? Vous avez des idées pour l’améliorer ?
 **Restez connecté !**
             """)
 
-app.launch()
+# Lancement de l'app avec port et host adaptés (pour déploiement sur Render ou autre)
+port = int(os.environ.get("PORT", 7860))
+app.launch(server_name="0.0.0.0", server_port=port)
