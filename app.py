@@ -1,10 +1,7 @@
-from flask import Flask, send_from_directory
 import gradio as gr
 import os
-from gradio.routes import mount_gradio_app
 
-# Ton code Gradio ici, encapsulé dans une fonction ou variable
-
+# Texte de connaissances nutritionnelles intégrées (inchangé)
 document_connaissances = """
 Nutrition et santé :
 
@@ -71,18 +68,10 @@ def recommandations(weight, height, age, gender, activity, goal):
         menu = "Régime équilibré avec variété d'aliments."
     return f"{cal} kcal/jour", sport, menu
 
+# Bannière image exemple
 BANNER_URL = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
 
-# Création du serveur Flask
-flask_app = Flask(__name__)
-
-# Route pour servir le fichier Google (à placer dans le même dossier que app.py)
-@flask_app.route('/googlec0adce60c562d2ae.html')
-def google_verification():
-    return send_from_directory('.', 'googlec0adce60c562d2ae.html')
-
-# Création de l'app Gradio
-with gr.Blocks(theme=gr.themes.Base()) as gradio_app:
+with gr.Blocks(theme=gr.themes.Base()) as app:
     with gr.Tabs():
         with gr.TabItem("🏠 Accueil"):
             gr.Image(value=BANNER_URL, show_label=False, interactive=False)
@@ -205,9 +194,6 @@ Vous aimez le projet ? Vous avez des idées pour l’améliorer ?
 **Restez connecté !**
             """)
 
-# Monte l'app Gradio dans Flask
-mount_gradio_app(flask_app, gradio_app, path="/")
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 7860))
-    flask_app.run(host="0.0.0.0", port=port)
+# Lancement de l'app avec port et host adaptés (pour déploiement sur Render ou autre)
+port = int(os.environ.get("PORT", 7860))
+app.launch(server_name="0.0.0.0", server_port=port) 
