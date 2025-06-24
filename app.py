@@ -1,18 +1,7 @@
 import gradio as gr
 import os
-from flask import Flask, send_from_directory
-from flask_cors import CORS
 
-# Initialisation de Flask
-flask_app = Flask(__name__)
-CORS(flask_app)
-
-# Route de vérification Google
-@flask_app.route('/googlec0adce60c562d2ae.html')
-def google_verification():
-    return send_from_directory('.', 'googlec0adce60c562d2ae.html')
-
-# Texte de connaissances nutritionnelles intégrées
+# Texte de connaissances nutritionnelles intégrées (inchangé)
 document_connaissances = """
 Nutrition et santé :
 
@@ -28,7 +17,6 @@ Nutrition et santé :
 10. Les besoins nutritionnels peuvent varier en fonction de pathologies, grossesse, etc.
 """
 
-# Assistant IA
 def assistant_ia(prompt):
     prompt_lower = prompt.lower()
     if "calorie" in prompt_lower or "besoin énergétique" in prompt_lower:
@@ -47,7 +35,6 @@ def assistant_ia(prompt):
     else:
         return "Voici quelques informations générales sur la nutrition:\n\n" + document_connaissances
 
-# Calculs BMR & TDEE
 def calc_bmr(weight, height, age, gender):
     if gender == "Homme":
         return 10 * weight + 6.25 * height - 5 * age + 5
@@ -81,17 +68,36 @@ def recommandations(weight, height, age, gender, activity, goal):
         menu = "Régime équilibré avec variété d'aliments."
     return f"{cal} kcal/jour", sport, menu
 
-# Image bannière
+# Bannière image exemple
 BANNER_URL = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
 
-# Gradio App
 with gr.Blocks(theme=gr.themes.Base()) as app:
     with gr.Tabs():
         with gr.TabItem("🏠 Accueil"):
             gr.Image(value=BANNER_URL, show_label=False, interactive=False)
             gr.Markdown("""
 🚀 **SanatioTech : La Révolution Technologique pour une Santé Plus Intelligente !**
-[...] # même texte que dans ton code précédent
+
+Bienvenue chez SanatioTech 🌟 – où l’innovation rencontre les soins de santé pour créer un avenir plus sûr, plus connecté et plus humain.
+
+💡 **Pourquoi SanatioTech ?**
+
+Nous repoussons les limites de la médecine grâce à des solutions high-tech intelligentes, conçues pour les professionnels exigeants comme pour les patients éclairés. Notre mission ? Vous offrir des outils qui anticipent, simplifient et améliorent votre quotidien.
+
+✨ **Nos Atouts Incontournables**
+
+🔹 Innovation de Pointe : IA médicale, diagnostics assistés, gestion optimisée des données… La santé de demain, aujourd’hui.  
+🔹 Sécurité Impeccable 🔒 : Vos données sont protégées avec des protocoles ultra-sécurisés, conformes aux normes internationales.  
+🔹 Simplicité d’Usage : Des interfaces intuitives pour une prise en main immédiate, sans compromis sur la performance.  
+🔹 Impact Réel : Des solutions qui améliorent concrètement les résultats médicaux et le confort des patients.
+
+🌍 **Rejoignez la Révolution SanatioTech !**
+
+Que vous soyez médecin, établissement de santé, ou particulier, nos technologies sur-mesure vous accompagnent pour une santé plus précise, proactive et personnalisée.
+
+👉 Découvrez nos solutions et transformez votre approche des soins !
+
+#SantéConnectée #InnovationMédicale #FuturDeLaSanté
             """)
 
         with gr.TabItem("📊 NutriTech"):
@@ -99,7 +105,48 @@ with gr.Blocks(theme=gr.themes.Base()) as app:
                 with gr.TabItem("📅 Présentation"):
                     gr.Markdown("""
 🌿 **NutriTech 🧠 – L’intelligence de la nutrition au service de votre santé**
-[...] # même contenu
+
+NutriTech est une application web innovante d’intelligence artificielle nutritionnelle, conçue pour aider chaque individu à mieux comprendre son corps, ses besoins caloriques et à recevoir des conseils personnalisés pour améliorer son mode de vie.
+
+🚀 **Fonctionnalités principales**  
+✨ Calcul intelligent des besoins caloriques journaliers  
+🎯 Basé sur la formule Mifflin-St Jeor, adaptée pour les hommes et les femmes  
+
+🥗 **Conseils nutritionnels personnalisés**  
+En fonction de vos objectifs :  
+✅ Perte de poids  
+💪 Prise de masse  
+⚖️ Maintien de forme  
+
+🧪 **Analyse des facteurs de mode de vie**  
+✓ Activité physique  
+✓ Objectif santé  
+
+🧬 **Technologies utilisées**  
+Python + scikit-learn pour les calculs et l’IA  
+Gradio pour une interface interactive simple et intuitive  
+Google Colab pour l’hébergement temporaire  
+Préparation future du déploiement avec Flask + Render ou HuggingFace Spaces  
+
+🎯 **Objectif du projet**  
+NutriTech a été développé dans le cadre d’un projet personnel visant à :  
+🌍 Rendre la nutrition accessible et compréhensible à tous  
+🤖 Montrer comment l’IA peut éduquer et prévenir les maladies  
+🚀 Construire une preuve de concept solide pour un futur produit de santé numérique à impact  
+
+👤 **Auteur**  
+Ibrahima Diallo  
+Lycéen passionné d’intelligence artificielle médicale & de santé préventive  
+📧 ibbidiallo7@gmail.com 🌐 GitHub : ibrahima-med-ai  
+
+📄 **Licence**  
+Ce projet est distribué sous licence MIT. Voir LICENSE pour plus d'informations.  
+
+💖 **Support & feedback**  
+Vous aimez le projet ? Vous avez des idées pour l’améliorer ?  
+👉 N’hésitez pas à ouvrir une issue, faire une pull request ou m’écrire directement !  
+
+© 2025 Ibrahima Diallo — Projet sous licence MIT
                     """)
                 with gr.TabItem("🔢 Calcul & conseils"):
                     with gr.Row():
@@ -147,8 +194,6 @@ with gr.Blocks(theme=gr.themes.Base()) as app:
 **Restez connecté !**
             """)
 
-# Lancer Flask + Gradio (Render compatible)
+# Lancement de l'app avec port et host adaptés (pour déploiement sur Render ou autre)
 port = int(os.environ.get("PORT", 7860))
-gradio_app = gr.mount_gradio_app(flask_app, app, path="/")
-flask_app.run(host="0.0.0.0", port=port)
-
+app.launch(server_name="0.0.0.0", server_port=port)
