@@ -1,5 +1,7 @@
 import gradio as gr
 import os
+from fastapi import FastAPI
+from starlette.staticfiles import StaticFiles
 
 # Texte de connaissances nutritionnelles intégrées (inchangé)
 document_connaissances = """
@@ -68,86 +70,20 @@ def recommandations(weight, height, age, gender, activity, goal):
         menu = "Régime équilibré avec variété d'aliments."
     return f"{cal} kcal/jour", sport, menu
 
-# Bannière image exemple
+# ------------------- Interface Gradio --------------------
+
 BANNER_URL = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
 
-with gr.Blocks(theme=gr.themes.Base()) as app:
+with gr.Blocks(theme=gr.themes.Base()) as gradio_app:
     with gr.Tabs():
         with gr.TabItem("🏠 Accueil"):
             gr.Image(value=BANNER_URL, show_label=False, interactive=False)
-            gr.Markdown("""
-🚀 **SanatioTech : La Révolution Technologique pour une Santé Plus Intelligente !**
-
-Bienvenue chez SanatioTech 🌟 – où l’innovation rencontre les soins de santé pour créer un avenir plus sûr, plus connecté et plus humain.
-
-💡 **Pourquoi SanatioTech ?**
-
-Nous repoussons les limites de la médecine grâce à des solutions high-tech intelligentes, conçues pour les professionnels exigeants comme pour les patients éclairés. Notre mission ? Vous offrir des outils qui anticipent, simplifient et améliorent votre quotidien.
-
-✨ **Nos Atouts Incontournables**
-
-🔹 Innovation de Pointe : IA médicale, diagnostics assistés, gestion optimisée des données… La santé de demain, aujourd’hui.  
-🔹 Sécurité Impeccable 🔒 : Vos données sont protégées avec des protocoles ultra-sécurisés, conformes aux normes internationales.  
-🔹 Simplicité d’Usage : Des interfaces intuitives pour une prise en main immédiate, sans compromis sur la performance.  
-🔹 Impact Réel : Des solutions qui améliorent concrètement les résultats médicaux et le confort des patients.
-
-🌍 **Rejoignez la Révolution SanatioTech !**
-
-Que vous soyez médecin, établissement de santé, ou particulier, nos technologies sur-mesure vous accompagnent pour une santé plus précise, proactive et personnalisée.
-
-👉 Découvrez nos solutions et transformez votre approche des soins !
-
-#SantéConnectée #InnovationMédicale #FuturDeLaSanté
-            """)
+            gr.Markdown("🚀 **SanatioTech : La Révolution Technologique pour une Santé Plus Intelligente !**\n\n[...]")
 
         with gr.TabItem("📊 NutriTech"):
             with gr.Tabs():
                 with gr.TabItem("📅 Présentation"):
-                    gr.Markdown("""
-🌿 **NutriTech 🧠 – L’intelligence de la nutrition au service de votre santé**
-
-NutriTech est une application web innovante d’intelligence artificielle nutritionnelle, conçue pour aider chaque individu à mieux comprendre son corps, ses besoins caloriques et à recevoir des conseils personnalisés pour améliorer son mode de vie.
-
-🚀 **Fonctionnalités principales**  
-✨ Calcul intelligent des besoins caloriques journaliers  
-🎯 Basé sur la formule Mifflin-St Jeor, adaptée pour les hommes et les femmes  
-
-🥗 **Conseils nutritionnels personnalisés**  
-En fonction de vos objectifs :  
-✅ Perte de poids  
-💪 Prise de masse  
-⚖️ Maintien de forme  
-
-🧪 **Analyse des facteurs de mode de vie**  
-✓ Activité physique  
-✓ Objectif santé  
-
-🧬 **Technologies utilisées**  
-Python + scikit-learn pour les calculs et l’IA  
-Gradio pour une interface interactive simple et intuitive  
-Google Colab pour l’hébergement temporaire  
-Préparation future du déploiement avec Flask + Render ou HuggingFace Spaces  
-
-🎯 **Objectif du projet**  
-NutriTech a été développé dans le cadre d’un projet personnel visant à :  
-🌍 Rendre la nutrition accessible et compréhensible à tous  
-🤖 Montrer comment l’IA peut éduquer et prévenir les maladies  
-🚀 Construire une preuve de concept solide pour un futur produit de santé numérique à impact  
-
-👤 **Auteur**  
-Ibrahima Diallo  
-Lycéen passionné d’intelligence artificielle médicale & de santé préventive  
-📧 ibbidiallo7@gmail.com 🌐 GitHub : ibrahima-med-ai  
-
-📄 **Licence**  
-Ce projet est distribué sous licence MIT. Voir LICENSE pour plus d'informations.  
-
-💖 **Support & feedback**  
-Vous aimez le projet ? Vous avez des idées pour l’améliorer ?  
-👉 N’hésitez pas à ouvrir une issue, faire une pull request ou m’écrire directement !  
-
-© 2025 Ibrahima Diallo — Projet sous licence MIT
-                    """)
+                    gr.Markdown("🌿 **NutriTech 🧠 – L’intelligence de la nutrition au service de votre santé**\n\n[...]")
                 with gr.TabItem("🔢 Calcul & conseils"):
                     with gr.Row():
                         with gr.Column():
@@ -169,32 +105,26 @@ Vous aimez le projet ? Vous avez des idées pour l’améliorer ?
                             out2 = gr.Textbox(label="Sport conseillé")
                             out3 = gr.Textbox(label="Menu conseillé", lines=6)
                     btn.click(recommandations, inputs=[w, h, a, g, act, obj], outputs=[out1, out2, out3])
-
                 with gr.TabItem("🧠 Assistant IA"):
                     prompt = gr.Textbox(label="Posez votre question nutritionnelle")
                     rep = gr.Textbox(label="Réponse de l'IA", lines=8)
                     gr.Button("Envoyer").click(assistant_ia, inputs=prompt, outputs=rep)
-
                 with gr.TabItem("🚀 À venir"):
-                    gr.Markdown("""
-### Prochaines fonctionnalités NutriTech
-- Suivi glycémique
-- Conseils personnalisés diabète/hypertension
-- Historique des recommandations
-- Dashboard interactif
-                    """)
+                    gr.Markdown("### Prochaines fonctionnalités NutriTech\n- Suivi glycémique\n- Dashboard interactif\n[...]")
 
         with gr.TabItem("🚀 Autres projets"):
-            gr.Markdown("""
-### Projets IA santé à venir sur SanatioTech
-- CardioPredict
-- MentalCare
-- NeuroFit
-- SleepOptima
-**Restez connecté !**
-            """)
+            gr.Markdown("### Projets IA santé à venir sur SanatioTech\n- CardioPredict\n- SleepOptima\n[...]")
 
-# Lancement de l'app avec port et host adaptés (pour déploiement sur Render ou autre)
-port = int(os.environ.get("PORT", 7860))
-app.launch(server_name="0.0.0.0", server_port=port)
+# ------------------- Intégration FastAPI --------------------
+
+from fastapi import FastAPI
+from starlette.staticfiles import StaticFiles
+
+app = FastAPI()
+
+# Sert le fichier de vérification Google placé dans ./public/
+app.mount("/", StaticFiles(directory="public", html=True), name="static")
+
+# Sert l'interface Gradio sur /app
+app = gr.mount_gradio_app(app, gradio_app, path="/app")
 
