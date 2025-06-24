@@ -1,5 +1,14 @@
 import gradio as gr
 import os
+from flask import Flask, send_from_directory
+from flask_cors import CORS
+
+flask_app = Flask(__name__)
+CORS(flask_app)
+
+@flask_app.route('/googlec0adce60c562d2ae.html')
+def google_verification():
+    return send_from_directory('.', 'googlec0adce60c562d2ae.html')
 
 # Texte de connaissances nutritionnelles intégrées (inchangé)
 document_connaissances = """
@@ -196,5 +205,10 @@ Vous aimez le projet ? Vous avez des idées pour l’améliorer ?
 
 # Lancement de l'app avec port et host adaptés (pour déploiement sur Render ou autre)
 port = int(os.environ.get("PORT", 7860))
-app.launch(server_name="0.0.0.0", server_port=port)
+# Lancement combiné Flask + Gradio (pour Render)
+port = int(os.environ.get("PORT", 7860))
+gr.mount_gradio_app(flask_app, gr.Interface(fn=recommandations, inputs=[], outputs=[]), path="/")
+flask_app.run(host="0.0.0.0", port=port)
+
+
 
