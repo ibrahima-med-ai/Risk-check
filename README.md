@@ -33,7 +33,7 @@ En fonction de vos objectifs :
 
 ## 📌 Utilisation rapide
 
-1. Cliquez sur ce lien pour accéder à l’interface 👉 [https://b12ef15a756c055de0.gradio.live](#)
+1. Cliquez sur ce lien pour accéder à l’interface 👉 [https://sanatiotech.onrender.com](#)
 2. Entrez vos données : âge, poids, taille, activité physique...
 3. L’IA calcule vos besoins caloriques et vous donne des conseils personnalisés
 4. ✅ Suivez-les et progressez !
