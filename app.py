@@ -127,4 +127,7 @@ app.mount("/", StaticFiles(directory="public", html=True), name="static")
 
 # Sert l'interface Gradio sur /app
 app = gr.mount_gradio_app(app, gradio_app, path="/app")
+git add public/googlec0adce60c562d2ae.html
+git commit -m "Ajout fichier de vérification Google"
+git push
 
