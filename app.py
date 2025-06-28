@@ -1,10 +1,7 @@
 import gradio as gr
 import os
-import datetime
-import json
-from pathlib import Path
 
-# ---------------------- Base de connaissances ----------------------
+# Texte de connaissances nutritionnelles intégrées (inchangé)
 document_connaissances = """
 Nutrition et santé :
 
@@ -20,26 +17,24 @@ Nutrition et santé :
 10. Les besoins nutritionnels peuvent varier en fonction de pathologies, grossesse, etc.
 """
 
-# ---------------------- IA Nutritionnelle ----------------------
 def assistant_ia(prompt):
     prompt_lower = prompt.lower()
     if "calorie" in prompt_lower or "besoin énergétique" in prompt_lower:
         return ("Le besoin calorique journalier dépend de votre âge, sexe, poids, taille et activité physique.\n"
-                "On utilise souvent la formule de Mifflin-St Jeor pour estimer le métabolisme de base (BMR), puis on ajuste selon le niveau d’activité pour obtenir le total des dépenses énergétiques (TDEE).")
+                "On utilise souvent la formule de Mifflin-St Jeor pour estimer le métabolisme de base (BMR), "
+                "puis on ajuste selon le niveau d’activité pour obtenir le total des dépenses énergétiques (TDEE).")
     elif "perdre du poids" in prompt_lower:
-        return ("Pour perdre du poids, il est recommandé de créer un déficit calorique d'environ 500 kcal par jour, accompagné d'une activité physique régulière, notamment du cardio.")
+        return ("Pour perdre du poids, il est recommandé de créer un déficit calorique d'environ 500 kcal par jour, "
+                "accompagné d'une activité physique régulière, notamment du cardio.")
     elif "gagner du poids" in prompt_lower or "prise de masse" in prompt_lower:
-        return ("Pour gagner du poids, un surplus calorique d'environ 500 kcal par jour est conseillé, associé à un entraînement de musculation pour favoriser la prise de masse musculaire.")
-    elif "tension" in prompt_lower:
-        return ("Une bonne tension artérielle se maintient grâce à une alimentation pauvre en sel, la gestion du stress, une activité physique régulière, et un suivi médical. Valeurs idéales : entre 90/60 et 120/80 mmHg.")
-    elif "glycémie" in prompt_lower or "diabète" in prompt_lower:
-        return ("Surveillez votre glycémie régulièrement, suivez un régime à index glycémique bas et évitez les sucres rapides. Glycémie à jeun idéale : 0,70 à 1,00 g/L.")
+        return ("Pour gagner du poids, un surplus calorique d'environ 500 kcal par jour est conseillé, "
+                "associé à un entraînement de musculation pour favoriser la prise de masse musculaire.")
     elif "alimentation équilibrée" in prompt_lower or "nutrition" in prompt_lower:
-        return ("Une alimentation équilibrée comprend des protéines, glucides, lipides, fibres, vitamines et minéraux. Il est important de privilégier des aliments variés et non transformés.")
+        return ("Une alimentation équilibrée comprend des protéines, glucides, lipides, fibres, vitamines et minéraux. "
+                "Il est important de privilégier des aliments variés et non transformés.")
     else:
-        return "Voici quelques informations générales sur la nutrition :\n\n" + document_connaissances
+        return "Voici quelques informations générales sur la nutrition:\n\n" + document_connaissances
 
-# ---------------------- Calculs caloriques ----------------------
 def calc_bmr(weight, height, age, gender):
     if gender == "Homme":
         return 10 * weight + 6.25 * height - 5 * age + 5
@@ -71,28 +66,15 @@ def recommandations(weight, height, age, gender, activity, goal):
     else:
         sport = "Activité modérée régulière"
         menu = "Régime équilibré avec variété d'aliments."
-    save_history({"calories": cal, "sport": sport, "menu": menu, "date": str(datetime.datetime.now())})
     return f"{cal} kcal/jour", sport, menu
 
-# ---------------------- Historique ----------------------
-history_path = Path("history.json")
-def load_history():
-    if history_path.exists():
-        with open(history_path, "r") as f:
-            return json.load(f)
-    return []
+# Bannière image exemple
+BANNER_URL = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
 
-def save_history(entry):
-    data = load_history()
-    data.append(entry)
-    with open(history_path, "w") as f:
-        json.dump(data[-50:], f, indent=2)
-
-# ---------------------- Interface Gradio ----------------------
-with gr.Blocks(theme=gr.themes.Soft()) as app:
+with gr.Blocks(theme=gr.themes.Base()) as app:
     with gr.Tabs():
-
         with gr.TabItem("🏠 Accueil"):
+            gr.Image(value=BANNER_URL, show_label=False, interactive=False)
             gr.Markdown("""
 🚀 **SanatioTech : La Révolution Technologique pour une Santé Plus Intelligente !**
 
@@ -120,41 +102,6 @@ Que vous soyez médecin, établissement de santé, ou particulier, nos technolog
 
         with gr.TabItem("📊 NutriTech"):
             with gr.Tabs():
-                with gr.TabItem("🔢 Calcul & conseils"):
-                    with gr.Row():
-                        with gr.Column():
-                            w = gr.Slider(30, 200, value=70, label="Poids (kg)")
-                            h = gr.Slider(100, 220, value=170, label="Taille (cm)")
-                            a = gr.Slider(10, 100, value=25, label="Âge")
-                            g = gr.Radio(["Homme", "Femme"], label="Sexe")
-                            act = gr.Dropdown(label="Activité", choices=[
-                                "Sédentaire (peu ou pas d'exercice)",
-                                "Légèrement actif (1-3 jours/semaine)",
-                                "Modérément actif (3-5 jours/semaine)",
-                                "Très actif (6-7 jours/semaine)",
-                                "Extrêmement actif"
-                            ])
-                            obj = gr.Radio(["Perdre du poids", "Maintenir le poids", "Gagner du poids"], label="Objectif")
-                            btn = gr.Button("Calculer")
-                        with gr.Column():
-                            out1 = gr.Textbox(label="Calories (kcal/jour)")
-                            out2 = gr.Textbox(label="Sport conseillé")
-                            out3 = gr.Textbox(label="Menu conseillé", lines=6)
-                    btn.click(recommandations, inputs=[w, h, a, g, act, obj], outputs=[out1, out2, out3])
-
-                with gr.TabItem("📈 Historique"):
-                    hist_btn = gr.Button("Afficher l'historique")
-                    hist_out = gr.Textbox(label="Derniers calculs", lines=12)
-                    def show_history():
-                        data = load_history()
-                        return "\n\n".join([f"{h['date']} : {h['calories']} kcal | {h['sport']} | {h['menu']}" for h in data[-10:]])
-                    hist_btn.click(show_history, outputs=hist_out)
-
-                with gr.TabItem("🧠 Assistant IA"):
-                    prompt = gr.Textbox(label="Posez votre question nutritionnelle")
-                    rep = gr.Textbox(label="Réponse de l'IA", lines=8)
-                    gr.Button("Envoyer").click(assistant_ia, inputs=prompt, outputs=rep)
-
                 with gr.TabItem("📅 Présentation"):
                     gr.Markdown("""
 🌿 **NutriTech 🧠 – L’intelligence de la nutrition au service de votre santé**
@@ -190,9 +137,63 @@ NutriTech a été développé dans le cadre d’un projet personnel visant à :
 👤 **Auteur**  
 Ibrahima Diallo  
 Lycéen passionné d’intelligence artificielle médicale & de santé préventive  
-📧 ibbidiallo7@gmail.com 🌐 GitHub : ibrahima-med-ai
+📧 ibbidiallo7@gmail.com 🌐 GitHub : ibrahima-med-ai  
+
+📄 **Licence**  
+Ce projet est distribué sous licence MIT. Voir LICENSE pour plus d'informations.  
+
+💖 **Support & feedback**  
+Vous aimez le projet ? Vous avez des idées pour l’améliorer ?  
+👉 N’hésitez pas à ouvrir une issue, faire une pull request ou m’écrire directement !  
+
+© 2025 Ibrahima Diallo — Projet sous licence MIT
+                    """)
+                with gr.TabItem("🔢 Calcul & conseils"):
+                    with gr.Row():
+                        with gr.Column():
+                            w = gr.Slider(30, 200, value=70, label="Poids (kg)")
+                            h = gr.Slider(100, 220, value=170, label="Taille (cm)")
+                            a = gr.Slider(10, 100, value=25, label="Âge")
+                            g = gr.Radio(["Homme", "Femme"], label="Sexe")
+                            act = gr.Dropdown(label="Activité", choices=[
+                                "Sédentaire (peu ou pas d'exercice)",
+                                "Légèrement actif (1-3 jours/semaine)",
+                                "Modérément actif (3-5 jours/semaine)",
+                                "Très actif (6-7 jours/semaine)",
+                                "Extrêmement actif"
+                            ])
+                            obj = gr.Radio(["Perdre du poids", "Maintenir le poids", "Gagner du poids"], label="Objectif")
+                            btn = gr.Button("Calculer")
+                        with gr.Column():
+                            out1 = gr.Textbox(label="Calories (kcal/jour)")
+                            out2 = gr.Textbox(label="Sport conseillé")
+                            out3 = gr.Textbox(label="Menu conseillé", lines=6)
+                    btn.click(recommandations, inputs=[w, h, a, g, act, obj], outputs=[out1, out2, out3])
+
+                with gr.TabItem("🧠 Assistant IA"):
+                    prompt = gr.Textbox(label="Posez votre question nutritionnelle")
+                    rep = gr.Textbox(label="Réponse de l'IA", lines=8)
+                    gr.Button("Envoyer").click(assistant_ia, inputs=prompt, outputs=rep)
+
+                with gr.TabItem("🚀 À venir"):
+                    gr.Markdown("""
+### Prochaines fonctionnalités NutriTech
+- Suivi glycémique
+- Conseils personnalisés diabète/hypertension
+- Historique des recommandations
+- Dashboard interactif
                     """)
 
+        with gr.TabItem("🚀 Autres projets"):
+            gr.Markdown("""
+### Projets IA santé à venir sur SanatioTech
+- CardioPredict
+- MentalCare
+- NeuroFit
+- SleepOptima
+**Restez connecté !**
+            """)
+
+# Lancement de l'app avec port et host adaptés (pour déploiement sur Render ou autre)
 port = int(os.environ.get("PORT", 7860))
 app.launch(server_name="0.0.0.0", server_port=port)
-
