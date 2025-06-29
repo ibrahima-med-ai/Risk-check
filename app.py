@@ -2,264 +2,123 @@ import gradio as gr
 import sqlite3
 import os
 from datetime import datetime
-import requests
+import hashlib
 
-# Configuration de l'application
-APP_NAME = "NutriTech Teranga"
-CURRENCY = "XOF"
-PREMIUM_PRICE = 5000  # 5000 FCFA
-RECIPIENT_PHONE = "781492364"  # Votre numéro Wave/Orange Money
+# Configuration
+RECIPIENT_PHONE = "781492364"
+PREMIUM_PRICE = 3000  # 3000 FCFA
 SUPPORT_EMAIL = "ibbidiallo7@gmail.com"
-ADMIN_PHONE = "781492364"
+DB_NAME = "nutritech.db"
 
-# Initialisation de la base de données
+# Initialisation DB
 def init_db():
-    conn = sqlite3.connect('nutritech.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         phone TEXT UNIQUE,
-        registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+        password TEXT,
         is_premium BOOLEAN DEFAULT 0,
-        last_payment_date DATETIME
+        reg_date DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     ''')
-    
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS payments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_phone TEXT,
-        amount INTEGER,
-        method TEXT,
-        transaction_id TEXT,
-        date DATETIME DEFAULT CURRENT_TIMESTAMP,
-        status TEXT
-    )
-    ''')
-    
     conn.commit()
     return conn
 
 db = init_db()
 
-# Services de paiement (simulés pour l'exemple)
+# Services de paiement (simulés)
 class PaymentService:
     @staticmethod
-    def process_payment(sender_phone: str, amount: int, method: str) -> bool:
-        """Simule un paiement mobile avec enregistrement"""
-        try:
-            # En production, utiliser les vrais APIs:
-            # - Wave: https://developer.wave.com/
-            # - Orange Money: https://developer.orange.com/
-            
-            transaction_id = f"{method[:3]}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-            
-            cursor = db.cursor()
-            cursor.execute('''
-            INSERT INTO payments (user_phone, amount, method, transaction_id, status)
-            VALUES (?, ?, ?, ?, ?)
-            ''', (sender_phone, amount, method, transaction_id, "completed"))
-            
-            # Envoyer une notification (simulée)
-            print(f"Notification: {amount}FCFA reçu de {sender_phone} via {method}")
-            
-            # Mettre à jour le statut premium si c'est le bon montant
-            if amount >= PREMIUM_PRICE:
-                cursor.execute('''
-                UPDATE users SET is_premium=1, last_payment_date=CURRENT_TIMESTAMP
-                WHERE phone=?
-                ''', (sender_phone,))
-            
-            db.commit()
-            return True
-        
-        except Exception as e:
-            print(f"Erreur paiement: {e}")
-            return False
+    def process_payment(phone, method):
+        """Simule un paiement mobile"""
+        print(f"📲 Paiement reçu: {method} de {phone}")
+        cursor = db.cursor()
+        cursor.execute("UPDATE users SET is_premium=1 WHERE phone=?", (phone,))
+        db.commit()
+        return True
 
-# Interface utilisateur
-def create_ui():
-    with gr.Blocks(theme=gr.themes.Soft(), title=APP_NAME) as app:
-        # Header
-        gr.Markdown(f"""
-        <div style="text-align:center">
-            <h1>🌍 NutriTech Teranga</h1>
-            <p>Votre coach nutritionnel sénégalais</p>
-            <p><em>Par Ibrahima Diallo</em></p>
-        </div>
-        """)
-        
-        # Authentification
-        with gr.Row():
-            with gr.Column(scale=1):
-                gr.Markdown("### 🔐 Connexion")
-                phone = gr.Textbox(label="Votre numéro (ex: 781234567)", placeholder="78XXXXXXX")
-                login_btn = gr.Button("Se connecter", variant="primary")
-                auth_status = gr.Markdown("")
-            
-            with gr.Column(scale=2, visible=False) as main_ui:
-                # Calculateur nutritionnel
-                gr.Markdown("## 🧮 Calculateur Nutritionnel")
-                with gr.Row():
-                    weight = gr.Slider(30, 150, value=65, label="Poids (kg)")
-                    height = gr.Slider(140, 220, value=170, label="Taille (cm)")
-                age = gr.Slider(15, 80, value=25, label="Âge")
-                gender = gr.Radio(["Homme", "Femme"], label="Sexe")
-                activity = gr.Dropdown([
-                    "Sédentaire (peu d'activité)",
-                    "Actif léger (1-3x/semaine)",
-                    "Actif modéré (3-5x/semaine)",
-                    "Sportif (6-7x/semaine)"
-                ], label="Niveau d'activité")
-                
-                goal = gr.Radio([
-                    "Perdre du poids",
-                    "Maintenir mon poids",
-                    "Prendre du poids"
-                ], label="Objectif")
-                
-                calculate_btn = gr.Button("Calculer mes besoins", variant="primary")
-                
-                # Résultats
-                with gr.Row():
-                    bmr = gr.Number(label="Métabolisme de base (BMR)")
-                    tdee = gr.Number(label="Dépense énergétique (TDEE)")
-                advice = gr.Textbox(label="Nos conseils", lines=5, interactive=False)
-                
-                # Section Premium
-                with gr.Column(visible=False) as premium_ui:
-                    gr.Markdown("### 💎 Fonctionnalités Premium")
-                    gr.Markdown("""
-                    - Plan alimentaire personnalisé
-                    - Suivi hebdomadaire
-                    - Recettes locales saines
-                    - Support prioritaire
-                    """)
-                    
-                    payment_method = gr.Radio(
-                        ["Wave", "Orange Money"],
-                        label="Méthode de paiement"
-                    )
-                    
-                    gr.Markdown(f"""
-                    <div style="background:#f5f5f5;padding:15px;border-radius:8px">
-                        <p>💰 Prix: <strong>{PREMIUM_PRICE} FCFA</strong></p>
-                        <p>📞 Envoyer à: <strong>{RECIPIENT_PHONE}</strong></p>
-                        <p>📧 Confirmation: <strong>{SUPPORT_EMAIL}</strong></p>
-                    </div>
-                    """)
-                    
-                    confirm_btn = gr.Button("J'ai effectué le paiement", variant="primary")
-                    payment_status = gr.Markdown("")
-        
-        # Fonctions interactives
-        def authenticate(phone):
-            if not phone.isdigit() or len(phone) != 9:
-                return {
-                    auth_status: "❌ Numéro invalide. Exemple: 781234567",
-                    main_ui: gr.Column.update(visible=False)
-                }
-            
-            cursor = db.cursor()
-            cursor.execute("SELECT is_premium FROM users WHERE phone=?", (phone,))
-            user = cursor.fetchone()
-            
-            if not user:
-                cursor.execute("INSERT INTO users (phone) VALUES (?)", (phone,))
-                db.commit()
-                is_premium = False
-            else:
-                is_premium = user[0]
-            
-            return {
-                auth_status: "",
-                main_ui: gr.Column.update(visible=True),
-                premium_ui: gr.Column.update(visible=not is_premium)
-            }
-        
-        def calculate_needs(weight, height, age, gender, activity, goal):
-            # Formule de Mifflin-St Jeor
-            if gender == "Homme":
-                bmr = 10*weight + 6.25*height - 5*age + 5
-            else:
-                bmr = 10*weight + 6.25*height - 5*age - 161
-            
-            # Facteur d'activité
-            activity_map = {
-                "Sédentaire (peu d'activité)": 1.2,
-                "Actif léger (1-3x/semaine)": 1.375,
-                "Actif modéré (3-5x/semaine)": 1.55,
-                "Sportif (6-7x/semaine)": 1.725
-            }
-            
-            tdee = bmr * activity_map.get(activity, 1.2)
-            
-            # Conseils adaptés
-            if goal == "Perdre du poids":
-                tdee -= 500
-                conseils = """Conseils pour maigrir:
-                - Réduire l'huile dans les plats
-                - Manger plus de poisson grillé
-                - Faire 30min de marche quotidienne
-                - Boire beaucoup d'eau"""
-            elif goal == "Prendre du poids":
-                tdee += 500
-                conseils = """Conseils pour grossir:
-                - Augmenter les portions de riz
-                - Consommer des arachides
-                - Musculation 3x/semaine
-                - Dormir suffisamment"""
-            else:
-                conseils = """Conseils de maintien:
-                - Garder une alimentation équilibrée
-                - Activité physique régulière
-                - Contrôler son poids 1x/semaine"""
-            
-            return {
-                bmr: round(bmr),
-                tdee: round(tdee),
-                advice: conseils
-            }
-        
-        def confirm_payment(phone, method):
-            success = PaymentService.process_payment(phone, PREMIUM_PRICE, method)
-            
-            if success:
-                return {
-                    payment_status: "✅ Paiement confirmé! Vous avez maintenant accès au Premium.",
-                    premium_ui: gr.Column.update(visible=False)
-                }
-            else:
-                return {
-                    payment_status: "❌ Paiement non reconnu. Contactez le support au " + ADMIN_PHONE
-                }
-        
-        # Liaisons des événements
-        login_btn.click(
-            authenticate,
-            inputs=phone,
-            outputs=[auth_status, main_ui, premium_ui]
-        )
-        
-        calculate_btn.click(
-            calculate_needs,
-            inputs=[weight, height, age, gender, activity, goal],
-            outputs=[bmr, tdee, advice]
-        )
-        
-        confirm_btn.click(
-            confirm_payment,
-            inputs=[phone, payment_method],
-            outputs=[payment_status, premium_ui]
-        )
+# Interface Gradio
+with gr.Blocks(title="NutriTech Teranga", theme=gr.themes.Soft()) as app:
+    # State
+    current_user = gr.State(None)
     
-    return app
+    # Authentification
+    with gr.Tab("🔐 Compte"):
+        phone = gr.Textbox(label="Votre numéro (ex: 781234567)")
+        password = gr.Textbox(label="Mot de passe", type="password")
+        login_btn = gr.Button("Se connecter")
+        reg_btn = gr.Button("S'inscrire")
+        auth_status = gr.Markdown()
+    
+    # Calculateur (visible après connexion)
+    with gr.Tab("🧮 Nutrition", visible=False) as calc_tab:
+        gr.Markdown(f"### 💡 Bienvenue sur NutriTech Teranga Premium")
+        
+        # Champs de saisie
+        weight = gr.Slider(30, 150, label="Poids (kg)")
+        height = gr.Slider(140, 220, label="Taille (cm)")
+        age = gr.Slider(15, 80, label="Âge")
+        gender = gr.Radio(["Homme", "Femme"], label="Sexe")
+        activity = gr.Dropdown(["Sédentaire", "Actif", "Sportif"], label="Activité")
+        
+        # Boutons
+        calculate_btn = gr.Button("Calculer", variant="primary")
+        
+        # Résultats
+        bmr = gr.Number(label="Métabolisme de base (BMR)")
+        tdee = gr.Number(label="Besoin calorique (TDEE)")
+        advice = gr.Textbox(label="Conseils", lines=4)
+        
+        # Paiement Premium
+        with gr.Accordion("💎 Devenir Premium (3000 FCFA)", open=False):
+            gr.Markdown(f"""
+            **Envoyez {PREMIUM_PRICE} FCFA à:**  
+            📞 **{RECIPIENT_PHONE}** via:
+            - Wave: *123*{RECIPIENT_PHONE}*3000#
+            - Orange: *144*{RECIPIENT_PHONE}*3000#
+            """)
+            payment_method = gr.Radio(["Wave", "Orange Money"], label="Méthode")
+            confirm_btn = gr.Button("J'ai payé")
+            payment_status = gr.Markdown()
 
-# Lancement de l'application
+    # Fonctions
+    def register(phone, password):
+        try:
+            hashed = hashlib.sha256(password.encode()).hexdigest()
+            cursor = db.cursor()
+            cursor.execute("INSERT INTO users (phone, password) VALUES (?, ?)", (phone, hashed))
+            db.commit()
+            return {"auth_status": "✅ Enregistré!", "current_user": (1, phone, hashed, 0)}
+        except sqlite3.IntegrityError:
+            return {"auth_status": "❌ Numéro déjà utilisé"}
+
+    def login(phone, password):
+        hashed = hashlib.sha256(password.encode()).hexdigest()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM users WHERE phone=? AND password=?", (phone, hashed))
+        user = cursor.fetchone()
+        if user:
+            return {
+                "auth_status": "✅ Connecté!",
+                "calc_tab": gr.Tabs.update(visible=True),
+                "current_user": user
+            }
+        return {"auth_status": "❌ Identifiants incorrects"}
+
+    def confirm_payment(user, method):
+        if PaymentService.process_payment(user[1], method):
+            return {"payment_status": "✅ Premium activé!"}
+        return {"payment_status": "❌ Paiement non reconnu"}
+
+    # Événements
+    reg_btn.click(register, [phone, password], [auth_status, current_user])
+    login_btn.click(login, [phone, password], [auth_status, calc_tab, current_user])
+    confirm_btn.click(confirm_payment, [current_user, payment_method], [payment_status])
+
+# Déploiement Render
 if __name__ == "__main__":
-    app = create_ui()
     app.launch(
         server_name="0.0.0.0",
         server_port=int(os.environ.get("PORT", 7860)),
